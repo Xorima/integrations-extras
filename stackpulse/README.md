@@ -1,32 +1,32 @@
-# StackPulse Integration
+# Torq Integration
 
 ## Overview
 
-The [StackPulse][1] integration enables you to trigger automatic playbooks in response to Datadog alerts, providing alert enrichment, incident mitigation, and collaboration. You can then send back events from your playbook executions directly to your Datadog event stream and dedicated StackPulse dashboard.
+The [Torq][1] integration enables you to trigger workflows in response to Datadog alerts, providing alert enrichment. You can then send back events directly from your Torq workflows to your Datadog event stream and dedicated Torq dashboard.
 
 ## Setup
 
-To set up this integration, you must have an active [StackPulse account][2] and an Account Owner role in that account. You must also have proper admin permissions in Datadog.
+To set up this integration, you must have an active [Torq account][2] and an Account Owner role in that account. You must also have proper admin permissions in Datadog.
 
-### StackPulse
+### Create a Datadog trigger integration in Torq
 
-1. On the **Integrations** page under **Monitoring**, locate the **Datadog** card and click [**New**][2].
+1. Go to **Integrations** > **Triggers**, locate the **Datadog** card, and click **Add**.
 
-2. Provide a meaningful name for the integration and click **Add**.
+2. Enter a meaningful name for the integration and click **Add**.
 
-3. **Copy** the newly created webhook endpoint.
+3. Copy the generated Webhook URL. You need this URL to configure a Webhook integration in your Datadog tenant.
 
-### Datadog
+### Define Datadog monitors to trigger events in Torq
 
-1. Navigate to **Integrations** and choose the [**Webhooks**][5] card.
+1. Navigate to **Integrations** > **Integrations**, click the **Webhooks** card, and click **New**.
+    ![datadog_webhook](https://raw.githubusercontent.com/DataDog/integrations-extras/master/stackpulse/images/datadog_webhook.png)
 
-2. Click on **New** to add a new Webhook integration.
+2. Enter a meaningful name for the Webhook integration and paste the generated Webhook URL from Torq. You need the integration name to associate the identifier (used for specific Datadog monitors to trigger Torq) and generated Webhook URL from Torq.
+    ![datadog_webhook_2](https://raw.githubusercontent.com/DataDog/integrations-extras/master/stackpulse/images/datadog_webhook_2.png)
 
-3. Fill in the name for a new Webhook integration (remember to use it later in specific Datadog monitors to trigger StackPulse) and the Webhook URL from the previous step.
+3. Torq recommends adding additional alert information to the payload. You can use portions of the following configuration:
 
-4. StackPulse recommends enhancing the payload with additional alert information, using portions of a configuration below:
-
-    ```json
+    ```json linenums="1"
     {
         "body": "$EVENT_MSG",
         "title": "$EVENT_TITLE",
@@ -65,39 +65,67 @@ To set up this integration, you must have an active [StackPulse account][2] and 
     }
     ```
 
-5. Pick monitors for triggering StackPulse Playbooks, and in the **Alert Your Team** field, add a reference to the newly created Webhook integration. For further details, see the [DataDog documentation on managing monitors][7].
+4. Pick monitors to trigger Torq Playbooks and add a reference to the newly created Webhook integration in the **Alert Your Team** field. For more details, see [Manage Monitors][7].
 
-6. Navigate to **Integrations -> APIs** and choose the **API Keys** card. Under **New API Key**, input a meaningful name for the new key and click **Create API Key**, then **Copy** the new key.
+## Use Datadog steps in Torq workflows
 
-### Back to StackPulse
+You need to create a Datadog API key and an application key to use as input parameters for Datadog steps in Torq.
 
-1. On the **Integrations** page under **Secrets**, locate the **Datadog API Keys** card and click [**Add**][8].
+**Note:** Some Datadog steps in Torq require an API key and application key, while other steps require the Datadog integration.
 
-2. Provide a meaningful name for the integration and click **Add**.
+### Create an API Key in Datadog
+
+After you create the API key, copy and save it because you are not able to access it later. For more information, see [API and Application Keys][12].
+
+1. Hover over your user name and select **Organization Settings**.
+2. From the left panel, click **API Keys**.
+3. Click **+ New Key**.
+    ![datadog_api_key](https://raw.githubusercontent.com/DataDog/integrations-extras/master/stackpulse/images/datadog_api_key.png)
+4. Enter a meaningful name for the API key such as `Torq` and click **Create Key**.
+5. Copy the `Key` and save it. You need this key to create a Datadog integration in Torq.
+
+### Create an Application Key in Datadog
+
+After you create the application key, copy and save it because you are not able to access it later. For more information, see [API and Application Keys]][13].
+
+1. Hover over your user name and select **Organization Settings**.
+2. From the left panel, click **Application Keys**.
+3. Click **+ New Key**.
+    ![datadog_app_key](https://raw.githubusercontent.com/DataDog/integrations-extras/master/stackpulse/images/datadog_app_key.png)
+4. Enter a meaningful name for the application key such as `Torq` and click **Create Key**.
+5. Copy the `Key` and save it. You need this key to create a Datadog integration in Torq.
+
+### Create a Datadog integration in Torq
+
+This integration enables you to use Datadog steps in your Torq workflows.
+
+1. Go to **Integrations** > **Steps**, locate the **Datadog** card, and click **Add**.
+
+2. Enter a meaningful name for the integration such as `Datadog-<monitor_type>` and click **Add**.
 
 ## Data Collected
 
 ### Metrics
 
-The StackPulse integration does not provide any metrics.
+The Torq integration does not provide any metrics.
 
 ### Events
 
-The StackPulse integration allows you to send events to your Datadog event stream using the [Datadog Post Event][10] step. You can use the step with your playbooks to notify Datadog about successful mitigations, execution failures and send enriched alert data back to Datadog.
+The Torq integration allows you to send events to your Datadog event stream from a Torq workflow using the [Datadog Post Event][10] step. You can use the step with your playbooks to notify Datadog about successful mitigations and execution failures. You can also send enriched alert data back to Datadog.
 
 ### Service Checks
 
-The StackPulse integration does not include any service checks.
+The Torq integration does not include any service checks.
 
 ## Troubleshooting
 
 Need help? Contact [Datadog support][11].
 
-[1]: https://stackpulse.com
-[2]: https://stackpulse.com/get-started/
-[3]: https://app.stackpulse.io/integrations/datadog?create=true
+[1]: https://torq.io
+[2]: https://torq.io/get-started/
 [5]: https://app.datadoghq.com/account/settings#integrations/webhooks
 [7]: https://docs.datadoghq.com/monitors/manage_monitor/
-[8]: https://app.stackpulse.io/integrations/datadog%20api%20keys?create=true
-[10]: https://github.com/stackpulse/steps/tree/master/steps/datadog/post-event
+[10]: https://github.com/torqio/steps/tree/master/steps/datadog/post-event
 [11]: https://docs.datadoghq.com/help/
+[12]: https://docs.datadoghq.com/account_management/api-app-keys/#add-an-api-key-or-client-token
+[13]: https://docs.datadoghq.com/account_management/api-app-keys/#add-application-keys
